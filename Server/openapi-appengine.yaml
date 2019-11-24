@@ -1,0 +1,16 @@
+# [START swagger]
+swagger: "2.0"
+info:
+  description: "Google Cloud Endpoints API mcc-fall-2019-g25."
+  title: "Endpoints For mcc-fall-2019-g25"
+  version: "1.0.0"
+host: "mcc-fall-2019-g25.appspot.com"
+# [END swagger]
+
+consumes:
+- "application/json"
+produces:
+- "application/json"
+schemes:
+- "https"
+paths:
