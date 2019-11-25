@@ -17,12 +17,13 @@ app.get('/', (req, res) => {
 });
 
 const usersRouter = require('./routes/users');
-// const groupRouter = require('./routes/groups');
-// const projectRouter = require('./routes/projects')
+const taskRouter = require('./routes/tasks');
+const projectRouter = require('./routes/projects')
 
 app.use('/', usersRouter);
-// app.use('/', groupRouter);
-// app.use('/',projectRouter)
+app.use('/', taskRouter);
+app.use('/',projectRouter)
+
 
 
 app.listen(PORT, ()=>{console.log(`Running on http://localhost:${PORT}`);});

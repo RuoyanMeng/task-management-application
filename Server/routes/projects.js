@@ -1,16 +1,43 @@
 const router = require('express').Router();
-const {admin, db} = require('../utils/admin');
+const { db} = require('../utils/admin');
 
 //create a new project
 router.route('/project').post((req, res) => {
-    const creationDate = Date.now();
-    db.collection("projects").add(req.body,{creationDate: creationDate})
-    .then(project=>{
-        return res.status(201).json({message:"create project success",id:project.id})
+    const creationDate = new Date();
+    // console.log(creationDate.toISOString())
+    let project = {
+        name : req.body.name,
+        description: req.body.description,
+        isPersonal: req.body.isPersonal,
+        administrator : req.body.administrator,
+        creationDate : creationDate.toISOString(),
+        collaborators: req.body.collaborators,
+        isFavorite:req.body.isFavorite
+    }
+    db.collection("projects").add(project)
+    .then(projectRecord=>{
+        let project = db.collection("projects").doc(projectRecord.id)
+        return (
+            project.update({
+            id:projectRecord.id
+            })
+        )  
+    })
+    .then(() =>{
+        return res.status(201).json({message:"create project success"})
     })
     .catch(err =>{
         return res.status(400).json("Error"+err)
     })
+});
+
+//get a project info
+router.route('/project/:id').get((req, res) => {
+    db.collection('projects').doc(req.params.id).get()
+    .then(project => {
+        return res.status(200).json({message:"get project success", project: project.data()})
+    })
+    .catch(err => res.status(400).json('Error: ' + err));
 });
 
 //delete a project
@@ -24,63 +51,64 @@ router.route('/project/:id').delete((req,res) => {
 
 //update a project
 router.route('/project/:id').put((req, res) => {
-    let FieldValue = admin.FieldValue
     let docRef = db.collection('projects').doc(req.params.id);
     docRef.update(req.body)
     .then(() => {
-        let updateTimestamp = docRef.update({modificationDate: FieldValue.serverTimestamp()});
-        return res.status(200).json({message:"update project success"},updateTimestamp)
+        let modificationDate = new Date();
+        docRef.update({modificationDate:modificationDate.toISOString()})
+        .then(project => {
+            return  res.status(201).json({message:"update project success"})
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
     })
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-//get a project info
-router.route('/project/:id').get((req, res) => {
-    db.collection('projects').doc(req.params.id)
-    .then(project => {
-        return res.status(200).json({message:"get project success"},project)
-    })
-    .catch(err => res.status(400).json('Error: ' + err));
-});
+
 
 //query and get a list of projects 
 router.route('/projects/:userID').get((req, res) => {
+    let projects = []
+    let projects2 = []
 
-    let res1 = db.collection('projects').doc(req.params.id).where("collaborators", 'array-contains', req.params.userID)
+    //start with collaborate projects of current user
+    let res1 = db.collection('projects').where("collaborators", 'array-contains', req.params.userID).get()
     .then(resp => {
-        let projects1 = []
         if(resp.empty){
-            return projects1
+            console.log("empty here")
         }
         else{
-            resp.forEach(projects => {
-                projects1.push(projects.data())
-            });
-            return projects1
-        }   
+            //let userid = req.params.userID
+            resp.forEach(project => {
+                //get if favorite project
+                //console.log(project.data().isFavorite[userid])
+                projects.push(project.data())
+            });        
+        }
+
+        //here to collect admin projects of current user
+        db.collection('projects').where("administrator.user", "==", req.params.userID).get()
+        .then(resp => {
+            if(resp.empty){
+                return projects2
+            }
+            else{
+                resp.forEach(projects => {
+                    projects2.push(projects.data())
+                });
+                projects.push(...projects2)
+                return res.json(projects)
+            }   
+            })
+        .catch(err =>{
+            return res.status(400).json("Error"+err)
+        })
     })
     .catch(err =>{
         return res.status(400).json("Error"+err)
     })
-    let res2 = db.collection('projects').doc(req.params.id).where("administrator", 'array-contains', req.params.userID)
-    .then(resp => {
-        let projects2 = []
-        if(resp.empty){
-            return projects2
-        }
-        else{
-            resp.forEach(projects => {
-                projects2.push(projects.data())
-            });
-            return projects2
-        }   
-    })
-    .catch(err =>{
-        return res.status(400).json("Error"+err)
-    })
 
-
-    return res1.push(...res2)
+    
 
 });
 

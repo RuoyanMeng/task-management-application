@@ -16,10 +16,14 @@ router.route('/user').post((req, res) => {
     admin.auth().createUser(newUser)
         .then(function(userRecord) {
           // See the UserRecord reference doc for the contents of userRecord.
+          console.log(userRecord.uid)
+            
           let user = db.collection('users').doc(userRecord.uid);
           return (
             user.set({
-                name: newUser.name
+                uid: userRecord.uid,
+                name: newUser.name,
+                email: newUser.email
             })
           )
         })
@@ -27,27 +31,28 @@ router.route('/user').post((req, res) => {
             res.status(201).json({message:'Successfully created new user'});
         })
         .catch(function(error) {
-          console.log('Error creating new user:', error);
+            res.status(201).json({message:'Error creating new user', err:error});
         });
 });
 
 //update user password
-router.route("/userupdate/:id").put((req ,res) => {
+router.route("/user/updpsw/:id").put((req ,res) => {
     admin.auth().updateUser(req.params.id,{
         password:req.body.password
     })
     .then(()=>{
-        return res.status(200).json({message:"update password success"})
+        return res.status(201).json({message:"update password success"})
     })
     .catch(err=>{
         return res.status(400).json({message:"update password failed", err:err})
     })
 });
 
+//get a user info
 router.route("/user/:id").get((req,res) => {
-    admin.auth().getUser(req.params.id)
+    db.collection('users').doc(req.params.id).get()
     .then(userRecord=>{
-        return res.status(200).json({message:"get user info success"},userRecord)
+        return res.status(200).json({message:"get user info success",user: userRecord.data()})
     })
     .catch(err => {
         return res.status(400).json('Error: ' + err)
@@ -56,9 +61,9 @@ router.route("/user/:id").get((req,res) => {
 
 
 //query user by name
-router.route("/users").get((req,res) => {
+router.route("/users/:name").get((req,res) => {
 
-    db.collection('users').where("name",">=", req.body.name)
+    db.collection('users').where("name",">=", req.params.name).get()
     .then(resp => {
         if(resp.empty){
             return res.json({message:"No matching users."})

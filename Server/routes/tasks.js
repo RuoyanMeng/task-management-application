@@ -2,12 +2,27 @@ const router = require('express').Router();
 const {admin, db} = require('../utils/admin');
 
 router.route('/task').post((req, res) => {
-    const creationDate = Date.now();
-    const status = "pending";
+    const creationDate = new Date();
+    let task = {
+        projectID: req.body.projectID,
+        status : req.body.status,
+        description: req.body.description,
+        deadline: req.body.deadline,
+        creationDate : creationDate.toISOString()
+    }
 
-    db.collection("tasks").add(req.body,{creationDate: creationDate, status:status})
-    .then(task => {
-        return res.status(201).json({message:"create task success",id:task.id})
+    db.collection("tasks").add(task)
+    .then(taskRes => {
+        console.log(taskRes.id)
+        let task = db.collection("tasks").doc(taskRes.id)
+        return (
+            task.update({
+                id:taskRes.id
+            })
+        )  
+    })
+    .then(() =>{
+        return res.status(201).json({message:"create task success"})
     })
     .catch(err =>{
         return res.status(400).json("Error"+err)
@@ -38,7 +53,7 @@ router.route('/tasks/:projectID').get((req,res) => {
 router.route('/task/:id').put((req,res) => {
     db.collection("tasks").doc(req.params.id).update(req.body)
     .then(() => {
-        return res.status(200).json({message:"update task success"})
+        return res.status(201).json({message:"update task success"})
     })
     .catch(err =>{
         return res.status(400).json("Error"+err)
