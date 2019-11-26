@@ -15,7 +15,7 @@ class AuthViewModel(
     //email and password for the input
     var email: String? = null
     var password: String? = null
-
+    var name:String? = null
     //auth listener
     var authListener: AuthListener? = null
 
@@ -55,12 +55,12 @@ class AuthViewModel(
 
     //Doing same thing with signup
     fun signup() {
-        if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
+        if (email.isNullOrEmpty() || password.isNullOrEmpty() || name.isNullOrEmpty()) {
             authListener?.onFailure("Please input all values")
             return
         }
         authListener?.onStarted()
-        val disposable = repository.register(email!!, password!!)
+        val disposable = repository.register(email!!, password!!, name!!)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({

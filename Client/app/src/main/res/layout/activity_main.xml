@@ -25,11 +25,17 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Button
         android:onClick="@{(v) -> viewmodel.logout(v)}"
-        android:text="Logout"
+        android:text="@string/logout"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/textViewEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/projectList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/project_list" />
 
 </RelativeLayout>
 
