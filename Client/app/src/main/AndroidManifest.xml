@@ -12,8 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.main.MainActivity"></activity>
-        <activity android:name=".ui.auth.SignupActivity"></activity>
+        <activity android:name=".ui.createProject.UserList"></activity>
+        <activity android:name=".ui.createProject.CreateProject" />
+        <activity android:name=".ui.main.MainActivity" />
+        <activity android:name=".ui.auth.SignupActivity" />
+        <activity android:name=".ui.taskList.TaskListActivity"></activity>
+        <activity android:name=".ui.taskList.main.CreateTask"></activity>
+        <activity android:name=".ui.taskList.main.UploadFile"></activity>
+        <activity android:name=".ui.taskList.main.UploadImage"></activity>
         <activity android:name=".ui.auth.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

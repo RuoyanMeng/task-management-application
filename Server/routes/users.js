@@ -1,5 +1,29 @@
 const router = require('express').Router();
-const { admin , db } = require('../utils/admin');
+const { admin , db, firebase } = require('../utils/admin');
+
+router.route('/login').post((req, res) => {
+
+    let email = req.body.email;
+    let pwd =  req.body.password;
+
+    console.log(email + " " + pwd);
+
+    firebase.auth().signInWithEmailAndPassword(email, pwd).then((userCredential) => {
+        let user = userCredential.user;
+
+        if(user){
+            user.getIdToken(true).then(function(idToken) {
+                res.json({token:idToken})
+            }).catch(function(error) {
+                res.json({error: error.message})
+            });
+        } else { return res.json({err: "No user"});}
+
+    } ).catch(function(error) {
+        res.json({error: error.message})
+    });
+
+});
 
 // create a user and upload it's profile to firestore
 router.route('/user').post((req, res) => {

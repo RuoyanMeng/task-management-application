@@ -4,15 +4,14 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.example.client.R
+import com.example.client.data.model.Project
 
-import kotlinx.android.synthetic.main.fragment_project.view.*
 
 class ProjectRecyclerViewAdapter(private val mValues: List<Project>,
                                  private val mListener: OnListFragmentInteractionListener?)
 
-    : RecyclerView.Adapter<ProjectRecyclerViewAdapter.ProjectFragment>() {
+    : RecyclerView.Adapter<ProjectFragment>() {
 
     private val mOnClickListener: View.OnClickListener
 
@@ -32,27 +31,21 @@ class ProjectRecyclerViewAdapter(private val mValues: List<Project>,
 
     override fun onBindViewHolder(holder: ProjectFragment, position: Int) {
         val project = mValues[position]
-        holder.mIdView.text = project.id
-        holder.mContentView.text = project.description
+        holder.projectNameTextView.text = project.name
+        holder.modificationDateTextView.text = if(project.modificationDate != null) project.modificationDate.toString() else "Never Modified"
+        holder.deadlineTextView.text = if(project.deadline != null) project.deadline.toString() else "No deadline set"
 
         with(holder.mView) {
             tag = project
             setOnClickListener(mOnClickListener)
         }
+
     }
 
     override fun getItemCount(): Int = mValues.size
-
-    inner class ProjectFragment(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView = mView.item_number
-        val mContentView: TextView = mView.content
-
-        override fun toString(): String {
-            return super.toString() + " '" + mContentView.text + "'"
-        }
-    }
 
     interface OnListFragmentInteractionListener {
         fun onListFragmentInteraction(item: Project?)
     }
 }
+

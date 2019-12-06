@@ -13,4 +13,5 @@ class UserRepository (
     fun currentUser() = firebase.currentUser()
 
     fun logout() = firebase.logout()
+
 }

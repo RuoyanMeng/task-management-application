@@ -10,7 +10,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.client.R
 import com.example.client.databinding.ActivitySignupBinding
 import com.example.client.ui.main.MainActivity
-import com.example.client.utils.startMainActivity
+import com.example.client.utils.startLoginActivity
+//import com.example.client.utils.startMainActivity
 import kotlinx.android.synthetic.main.activity_signup.*
 
 import org.kodein.di.KodeinAware
@@ -37,7 +38,7 @@ class SignupActivity : AppCompatActivity(), AuthListener, KodeinAware {
 
     override fun onStarted() {
         progressbar.visibility = View.VISIBLE
-        Intent(this, MainActivity::class.java).also {
+        Intent(this, LoginActivity::class.java).also {
             it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(it)
         }
@@ -45,7 +46,8 @@ class SignupActivity : AppCompatActivity(), AuthListener, KodeinAware {
 
     override fun onSuccess() {
         progressbar.visibility = View.GONE
-        startMainActivity()
+        startLoginActivity()
+//        startMainActivity()
     }
 
     override fun onFailure(message: String) {

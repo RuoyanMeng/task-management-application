@@ -179,7 +179,37 @@ paths:
         schema:
           $ref: '#/definitions/Project'
       responses:
-        200:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/Project'
+        default:
+          description: Default
+          schema:
+            $ref: '#/definitions/Error'
+  /project/isFavoriteU/{userID}:
+    put:
+      description: UpdateFav
+      summary: UpdateFav
+      operationId: UpdateFav
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: userID
+        in: path
+        required: true
+        type: integer
+        format: int32
+        description: user id
+      - name: body
+        in: body
+        required: false
+        description: ''
+        schema:
+          $ref: '#/definitions/Project'
+      responses:
+        201:
           description: Created
           schema:
             $ref: '#/definitions/Project'
@@ -363,9 +393,7 @@ definitions:
         type: string
         format: date-time
       administrator:
-        type: object
-        additionalProperties:
-          $ref: '#/definitions/ProjectUser'
+        type: string
       collaborators:
         type: array
         items:
@@ -379,18 +407,6 @@ definitions:
     - isPersonal
     - administrator
 
-  ProjectUser:
-    title: ProjectUser
-    description: users in a project
-    type: object
-    properties:
-      user:
-        type: string
-      isFavorite:
-        type: boolean
-    required:
-    - user
-    - isFavorite
   User:
     title: User
     type: object

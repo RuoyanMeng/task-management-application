@@ -1,12 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+const { db, admin } = require('./utils/admin');
 
 const PORT = process.env.PORT || 8080;
 
-
-
-
-// App
 const app = express();
 
 app.use(cors());
@@ -18,13 +15,31 @@ app.get('/', (req, res) => {
 
 const usersRouter = require('./routes/users');
 const taskRouter = require('./routes/tasks');
-const projectRouter = require('./routes/projects')
+const projectRouter = require('./routes/projects');
 
 app.use('/', usersRouter);
 app.use('/', taskRouter);
-app.use('/',projectRouter)
+app.use('/', checkAuth, projectRouter);
 
+function checkAuth(req, res, next) {
+    console.log("Checking Auth");
+    let idToken = req.get("Authorization");
 
+    if(!idToken){
+        console.log("Missing token");
+        return res.status(403).end();
+    }
+
+    admin.auth().verifyIdToken(idToken)
+        .then(function(decodedToken) {
+            console.log("Successful Auth");
+            req.uid = decodedToken.uid;
+            next();
+        }).catch(function(error) {
+            console.log("Failed Auth");
+            return res.status(403).end();
+        });
+}
 
 app.listen(PORT, ()=>{console.log(`Running on http://localhost:${PORT}`);});
 

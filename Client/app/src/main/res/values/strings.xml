@@ -15,4 +15,18 @@
     <string name="tab_text_3">Tab 3</string>
     <string name="logout">Logout</string>
     <string name="project_list">Project List</string>
+    <string name="CreateProject">Create a Project</string>
+    <string name="newProjectName">Name</string>
+    <string name="newProjectDescription">Description</string>
+    <string name="keyWords">Add keywords</string>
+    <string name="buttonAssignment">assignment</string>
+    <string name="finalProject">final project</string>
+    <string name="UserFindbyID">User Find by ID</string>
+    <string name="UserFindbyName">User Find by Name</string>
+    <string name="addMemberstoProject">Add members to a project</string>
+    <string name="add">Add</string>
+    <string name="finish">Finish</string>
+    <string name="project_name">Project Name</string>
+    <string name="modification_date">Last Modified</string>
+    <string name="deadline">Deadline</string>
 </resources>

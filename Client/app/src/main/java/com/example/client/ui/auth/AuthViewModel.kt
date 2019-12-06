@@ -1,6 +1,7 @@
 package com.example.client.ui.auth
 
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModel
 import com.example.client.data.repositories.UserRepository
@@ -39,6 +40,8 @@ class AuthViewModel(
         //authentication started
         authListener?.onStarted()
 
+        Log.d("sarah", "$email $password")
+
         //calling login from repository to perform the actual authentication
         val disposable = repository.login(email!!, password!!)
             .subscribeOn(Schedulers.io())
@@ -68,6 +71,7 @@ class AuthViewModel(
             }, {
                 authListener?.onFailure(it.message!!)
             })
+
         disposables.add(disposable)
     }
 

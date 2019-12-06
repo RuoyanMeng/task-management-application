@@ -1,16 +1,14 @@
 package com.example.client.ui.projectList
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.client.data.repositories.UserRepository
 
-class ProjectViewModelFactory (private val application: Application) : ViewModelProvider.Factory {
+@Suppress("UNCHECKED_CAST")
+class ProjectViewModelFactory(val kind: String) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(ProjectViewModel::class.java)) {
-            return ProjectViewModel(application) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        return ProjectViewModel(kind) as T
     }
 
 }

@@ -3,17 +3,21 @@ package com.example.client.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import com.example.client.R
+import com.example.client.R.id
 import com.example.client.databinding.ActivityMainBinding
+import com.example.client.ui.createProject.CreateProject
+import com.example.client.ui.projectList.ProjectListActivity
+import com.example.client.ui.taskList.TaskListActivity
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
-import android.widget.Button
-import com.example.client.R
-import com.example.client.ui.projectList.ProjectListActivity
 
+private val TAG:String = MainActivity::class.java.simpleName
 class MainActivity : AppCompatActivity(), KodeinAware {
 
     override val kodein by kodein()
@@ -21,6 +25,8 @@ class MainActivity : AppCompatActivity(), KodeinAware {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var projectListButton: Button
+    private lateinit var createProjectButton: Button
+    private lateinit var taskListButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +42,20 @@ class MainActivity : AppCompatActivity(), KodeinAware {
         val intent = Intent(this, ProjectListActivity::class.java)
         startActivity(intent)
         }
+        createProjectButton = findViewById(id.createProject)
+        createProjectButton.setOnClickListener{
+            val intent = Intent(this, CreateProject::class.java)
+            Log.d("MainActivity","Change into CreateProjectActivity")
+            startActivity(intent)
+        }
+
+        taskListButton = findViewById(R.id.taskList)
+        taskListButton.setOnClickListener {
+
+            val intent = Intent(this, TaskListActivity::class.java)
+            startActivity(intent)
+        }
+
 
     }
 

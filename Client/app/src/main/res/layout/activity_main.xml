@@ -37,6 +37,20 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
         android:layout_height="wrap_content"
         android:text="@string/project_list" />
 
+    <Button
+        android:id="@+id/createProject"
+        android:text="@string/CreateProject"
+        android:layout_below="@+id/projectList"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
+
+    <Button
+        android:id="@+id/taskList"
+        android:text="Task List"
+        android:layout_below="@+id/createProject"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
+
 </RelativeLayout>
 
 </layout>
